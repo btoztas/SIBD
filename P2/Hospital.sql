@@ -74,9 +74,9 @@ create table element
 create table region
    (series_id  varchar(255),
     elem_index  varchar(255),
-    x1	float(10,2),
-    y1	float(10,2),
-    x2	float(10,2),
-    y2	float(10,2),
+    x1	float(4,3),
+    y1	float(4,3),
+    x2	float(4,3),
+    y2	float(4,3),
     primary key(series_id, elem_index, x1, y1, x2, y2),
     foreign key(series_id, elem_index) references element(series_id, elem_index));
