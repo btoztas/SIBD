@@ -1,20 +1,20 @@
 DELIMITER $$
 
-CREATE TRIGGER check_doctor before insert on study
-for each row
-begin
-	if (new.doctor_id in(
-	select doctor_id
-	from request
-	where request_number = new.request_number)) then
+CREATE TRIGGER check_doctor BEFORE INSERT ON study
+FOR EACH ROW
+BEGIN
+	IF (new.doctor_id IN(
+	SELECT doctor_id
+	FROM request
+	WHERE request_number = new.request_number)) THEN
 		call erro();
-	end if;
-	/*select request.appointment_date into request_date from request where request_number = new.request_number;*/
-	if ((select datediff(new.study_date, request.appointment_date)
-	from request
-	where request_number = new.request_number) < 0) then
+	END IF;
+	/*select request.appointment_date into request_date FROM request WHERE request_number = new.request_number;*/
+	IF ((select datediff(new.study_date, request.appointment_date)
+	FROM request
+	WHERE request_number = new.request_number) < 0) THEN
 		call erro();
-	end if;
-end $$
+	END IF;
+END $$
 
 DELIMITER ;
