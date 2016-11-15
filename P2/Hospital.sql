@@ -1,5 +1,5 @@
 drop table if exists region;
-drop table if exists elements;
+drop table if exists element;
 drop table if exists series;
 drop table if exists study;
 drop table if exists equipment;
