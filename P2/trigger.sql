@@ -7,9 +7,8 @@ BEGIN
 	SELECT doctor_id
 	FROM request
 	WHERE request_number = new.request_number)) THEN
-		call erro();
+		call erro(); -- Generate a SQL error
 	END IF;
-	/*select request.appointment_date into request_date FROM request WHERE request_number = new.request_number;*/
 	IF ((select datediff(new.study_date, request.appointment_date)
 	FROM request
 	WHERE request_number = new.request_number) < 0) THEN
