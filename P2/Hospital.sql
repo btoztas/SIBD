@@ -65,7 +65,7 @@ create table series
     primary key(series_id),
     foreign key(request_number, description) references study(request_number, description));
 
-create table elements
+create table element
    (series_id  varchar(255),
     elem_index  varchar(255),
     primary key(series_id, elem_index),
@@ -79,4 +79,4 @@ create table region
     x2	float(10,2),
     y2	float(10,2),
     primary key(series_id, elem_index, x1, y1, x2, y2),
-    foreign key(series_id, elem_index) references elements(series_id, elem_index));
+    foreign key(series_id, elem_index) references element(series_id, elem_index));

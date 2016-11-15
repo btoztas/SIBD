@@ -101,26 +101,26 @@ insert into series values ('18', 'Serie R', 'http://www.medic.db/serier', '4', '
 insert into series values ('19', 'Serie T', 'http://www.medic.db/seriet', '4', 'X-ray right foot');
 insert into series values ('20', 'Serie U', 'http://www.medic.db/serieu', '4', 'X-ray right foot');
 
-insert into elements values ('1', '1');
-insert into elements values ('2', '1');
-insert into elements values ('3', '1');
-insert into elements values ('4', '1');
-insert into elements values ('5', '1');
-insert into elements values ('6', '1');
-insert into elements values ('7', '1');
-insert into elements values ('8', '1');
-insert into elements values ('9', '1');
-insert into elements values ('10', '1');
-insert into elements values ('11', '1');
-insert into elements values ('12', '1');
-insert into elements values ('13', '1');
-insert into elements values ('14', '1');
-insert into elements values ('15', '1');
-insert into elements values ('16', '1');
-insert into elements values ('17', '1');
-insert into elements values ('18', '1');
-insert into elements values ('19', '1');
-insert into elements values ('20', '2');
+insert into element values ('1', '1');
+insert into element values ('2', '1');
+insert into element values ('3', '1');
+insert into element values ('4', '1');
+insert into element values ('5', '1');
+insert into element values ('6', '1');
+insert into element values ('7', '1');
+insert into element values ('8', '1');
+insert into element values ('9', '1');
+insert into element values ('10', '1');
+insert into element values ('11', '1');
+insert into element values ('12', '1');
+insert into element values ('13', '1');
+insert into element values ('14', '1');
+insert into element values ('15', '1');
+insert into element values ('16', '1');
+insert into element values ('17', '1');
+insert into element values ('18', '1');
+insert into element values ('19', '1');
+insert into element values ('20', '2');
 
 insert into region values ('1', '1', 14.24, 18.23, 10.10, 24.32);
 insert into region values ('3', '1', 27.17, 20.11, 32.25, 34.92);
@@ -133,7 +133,9 @@ insert into region values ('15', '1', 91.23, 93.82, 96.49, 97.54);
 insert into region values ('17', '1', 93.82, 96.49, 97.54, 98.19);
 insert into region values ('19', '1', 90.50, 1.86, 4.32, 6.06);
 insert into region values ('7', '1', 14.24, 18.23, 10.10, 24.32);*/
+
 delimiter $$
+
 create trigger check_doctor before insert on study
 for each row
 begin
@@ -141,13 +143,23 @@ begin
 	select doctor_id
 	from request
 	where request_number = new.request_number)) then
-		call erroo();
+		call erro();
 	end if;
 	/*select request.appointment_date into request_date from request where request_number = new.request_number;*/
-	if ((select datediff(new.study_date, request.appointment_date) from request where request_number = new.request_number) < 0) then
-		call errooo();
+	if ((select datediff(new.study_date, request.appointment_date)
+	from request
+	where request_number = new.request_number) < 0) then
+		call erro();
 	end if;
 end $$
 
 delimiter ;
-
+/*
+select doctor_name
+from doctor natural join study
+where manufacturer = "Philips" and description like "%X-ray%" and datediff(current_date, study_date) < 7
+group by doctor_id having count(doctor_id) >= all (select count(doctor_id)
+from study
+where manufacturer = "Philips" and description like "%X-ray%" and datediff(current_date, study_date) < 7
+group by doctor_id having count(doctor_id))
+*/
