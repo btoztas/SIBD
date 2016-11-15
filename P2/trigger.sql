@@ -1,6 +1,6 @@
 DELIMITER $$
 
-create trigger check_doctor before insert on study
+CREATE TRIGGER check_doctor before insert on study
 for each row
 begin
 	if (new.doctor_id in(
