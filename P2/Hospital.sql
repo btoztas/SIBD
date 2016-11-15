@@ -1,82 +1,82 @@
-drop table if exists region;
-drop table if exists element;
-drop table if exists series;
-drop table if exists study;
-drop table if exists equipment;
-drop table if exists request;
-drop table if exists appointment;
-drop table if exists doctor;
-drop table if exists patient;
+DROP TABLE if exists region;
+DROP TABLE if exists element;
+DROP TABLE if exists series;
+DROP TABLE if exists study;
+DROP TABLE if exists equipment;
+DROP TABLE if exists request;
+DROP TABLE if exists appointment;
+DROP TABLE if exists doctor;
+DROP TABLE if exists patient;
 
-create table patient
+CREATE TABLE patient
    (patient_id  varchar(255),
     patient_name  varchar(255),
     birthday  date,
     address  varchar(255),
-    primary key(patient_id));
+    PRIMARY KEY(patient_id));
 
-create table doctor
+CREATE TABLE doctor
    (doctor_id  varchar(255),
     doctor_name  varchar(255),
     specialty   varchar(255),
-    primary key(doctor_id));
+    PRIMARY KEY(doctor_id));
     
-create table appointment
+CREATE TABLE appointment
    (patient_id  varchar(255),
     doctor_id  varchar(255),
     appointment_date   date,
     office  varchar(255),
-    primary key(patient_id, doctor_id, appointment_date),
-    foreign key(patient_id) references patient(patient_id),
-    foreign key(doctor_id) references doctor(doctor_id));
+    PRIMARY KEY(patient_id, doctor_id, appointment_date),
+    FOREIGN KEY(patient_id) references patient(patient_id),
+    FOREIGN KEY(doctor_id) references doctor(doctor_id));
 
-create table request
+CREATE TABLE request
    (request_number  varchar(255),
     patient_id  varchar(255),
     doctor_id  varchar(255),
     appointment_date   date,
-    primary key(request_number),
-    foreign key(patient_id, doctor_id, appointment_date) references appointment(patient_id, doctor_id, appointment_date));
+    PRIMARY KEY(request_number),
+    FOREIGN KEY(patient_id, doctor_id, appointment_date) references appointment(patient_id, doctor_id, appointment_date));
     
-create table equipment
+CREATE TABLE equipment
    (manufacturer  varchar(255),
     serial_number  varchar(255),
     model   varchar(255),
-    primary key(manufacturer, serial_number));
+    PRIMARY KEY(manufacturer, serial_number));
 
-create table study
+CREATE TABLE study
    (request_number  varchar(255),
     description  varchar(255),
     study_date  date,
     doctor_id  varchar(255),
     manufacturer  varchar(255),
     serial_number  varchar(255),
-    primary key(request_number, description),
-    foreign key(request_number) references request(request_number),
-    foreign key(doctor_id) references doctor(doctor_id),
-    foreign key(manufacturer, serial_number) references equipment(manufacturer, serial_number));
+    PRIMARY KEY(request_number, description),
+    FOREIGN KEY(request_number) references request(request_number),
+    FOREIGN KEY(doctor_id) references doctor(doctor_id),
+    FOREIGN KEY(manufacturer, serial_number) references equipment(manufacturer, serial_number));
 
-create table series
+CREATE TABLE series
    (series_id  varchar(255),
     series_name  varchar(255),
     base_url   varchar(255),
     request_number  varchar(255),
     description  varchar(255),
-    primary key(series_id),
-    foreign key(request_number, description) references study(request_number, description));
+    PRIMARY KEY(series_id),
+    FOREIGN KEY(request_number, description) references study(request_number, description));
 
-create table element
+CREATE TABLE element
    (series_id  varchar(255),
     elem_index  varchar(255),
-    primary key(series_id, elem_index),
-    foreign key(series_id) references series(series_id));
+    PRIMARY KEY(series_id, elem_index),
+    FOREIGN KEY(series_id) references series(series_id));
      
-create table region
+CREATE TABLE region
    (series_id  varchar(255),
     elem_index  varchar(255),
     x1	float(4,3),
     y1	float(4,3),
     x2	float(4,3),
     y2	float(4,3),
-    primary key(series_id, elem_index, x1, y1, x2, y2),
-    foreign key(series_id, elem_index) references element(series_id, elem_index));
+    PRIMARY KEY(series_id, elem_index, x1, y1, x2, y2),
+    FOREIGN KEY(series_id, elem_index) references element(series_id, elem_index));
