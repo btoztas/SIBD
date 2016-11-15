@@ -27,8 +27,8 @@ CREATE TABLE appointment
     appointment_date   date,
     office  varchar(255),
     PRIMARY KEY(patient_id, doctor_id, appointment_date),
-    FOREIGN KEY(patient_id) references patient(patient_id),
-    FOREIGN KEY(doctor_id) references doctor(doctor_id));
+    FOREIGN KEY(patient_id) REFERENCES patient(patient_id),
+    FOREIGN KEY(doctor_id) REFERENCES doctor(doctor_id));
 
 CREATE TABLE request
    (request_number  varchar(255),
@@ -36,7 +36,7 @@ CREATE TABLE request
     doctor_id  varchar(255),
     appointment_date   date,
     PRIMARY KEY(request_number),
-    FOREIGN KEY(patient_id, doctor_id, appointment_date) references appointment(patient_id, doctor_id, appointment_date));
+    FOREIGN KEY(patient_id, doctor_id, appointment_date) REFERENCES appointment(patient_id, doctor_id, appointment_date));
     
 CREATE TABLE equipment
    (manufacturer  varchar(255),
@@ -52,9 +52,9 @@ CREATE TABLE study
     manufacturer  varchar(255),
     serial_number  varchar(255),
     PRIMARY KEY(request_number, description),
-    FOREIGN KEY(request_number) references request(request_number),
-    FOREIGN KEY(doctor_id) references doctor(doctor_id),
-    FOREIGN KEY(manufacturer, serial_number) references equipment(manufacturer, serial_number));
+    FOREIGN KEY(request_number) REFERENCES request(request_number),
+    FOREIGN KEY(doctor_id) REFERENCES doctor(doctor_id),
+    FOREIGN KEY(manufacturer, serial_number) REFERENCES equipment(manufacturer, serial_number));
 
 CREATE TABLE series
    (series_id  varchar(255),
@@ -63,13 +63,13 @@ CREATE TABLE series
     request_number  varchar(255),
     description  varchar(255),
     PRIMARY KEY(series_id),
-    FOREIGN KEY(request_number, description) references study(request_number, description));
+    FOREIGN KEY(request_number, description) REFERENCES study(request_number, description));
 
 CREATE TABLE element
    (series_id  varchar(255),
     elem_index  varchar(255),
     PRIMARY KEY(series_id, elem_index),
-    FOREIGN KEY(series_id) references series(series_id));
+    FOREIGN KEY(series_id) REFERENCES series(series_id));
      
 CREATE TABLE region
    (series_id  varchar(255),
@@ -79,4 +79,4 @@ CREATE TABLE region
     x2	float(4,3),
     y2	float(4,3),
     PRIMARY KEY(series_id, elem_index, x1, y1, x2, y2),
-    FOREIGN KEY(series_id, elem_index) references element(series_id, elem_index));
+    FOREIGN KEY(series_id, elem_index) REFERENCES element(series_id, elem_index));
