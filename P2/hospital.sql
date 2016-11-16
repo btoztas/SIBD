@@ -70,7 +70,7 @@ CREATE TABLE element
     elem_index  VARCHAR(255),
     PRIMARY KEY(series_id, elem_index),
     FOREIGN KEY(series_id) REFERENCES series(series_id));
-     
+
 CREATE TABLE region
    (series_id  VARCHAR(255),
     elem_index  VARCHAR(255),
