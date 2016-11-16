@@ -125,11 +125,14 @@ insert into element values ('20', '2');
 insert into region values ('1', '1', 0.24, 0.23, 0.10, 0.32);
 insert into region values ('3', '1', 0.17, 0.11, 1.00, 0.92);
 insert into region values ('5', '1', 0.79, 0.67, 0.02, 0.02);
-insert into region values ('7', '1', 0.62, 0.98, 0.44, 0.27);
 insert into region values ('9', '1', 1.00, 0.14, 0.08, 0.36);
 insert into region values ('11', '1', 0.21, 0.13, 0.67, 0.30);
 insert into region values ('13', '1', 0.21, 0.91, 0.73, 0.45);
 insert into region values ('15', '1', 0.23, 0.82, 0.49, 0.54);
-insert into region values ('17', '1', 0.82, 0.49, 0.54, 0.19);
-insert into region values ('19', '1', 0.50, 1.00, 0.32, 0.06);
-insert into region values ('7', '1', 0.24, 0.23, 0.10, 0.32);
+insert into region values ('17', '1', 0.82, 0.82, 0.99, 0.99);
+insert into region values ('19', '1', 0.50, 0.50, 1, 1);
+insert into region values ('7', '1', 0.01, 0.01, 0.05, 0.05);
+insert into region values ('8', '1', 0.78, 0.78, 0.99, 0.99);
+
+
+
