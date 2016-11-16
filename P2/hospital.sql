@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS patient;
 CREATE TABLE patient
    (patient_id  VARCHAR(255),
     patient_name  VARCHAR(255),
-    birthday  date,
+    birthday  DATE,
     address  VARCHAR(255),
     PRIMARY KEY(patient_id));
 
@@ -24,8 +24,8 @@ CREATE TABLE doctor
 CREATE TABLE appointment
    (patient_id VARCHAR(255),
     doctor_id VARCHAR(255),
-    appointment_date date,
-    office VARCHAR(255),
+    appointment_date DATE,  -- we choose data type DATE, so we can make datediffs
+    office VARCHAR(255),1
     PRIMARY KEY(patient_id, doctor_id, appointment_date),
     FOREIGN KEY(patient_id) REFERENCES patient(patient_id),
     FOREIGN KEY(doctor_id) REFERENCES doctor(doctor_id));
@@ -47,7 +47,7 @@ CREATE TABLE equipment
 CREATE TABLE study
    (request_number  VARCHAR(255),
     description  VARCHAR(255),
-    study_date  date,
+    study_date  DATE,
     doctor_id  VARCHAR(255),
     manufacturer  VARCHAR(255),
     serial_number  VARCHAR(255),
