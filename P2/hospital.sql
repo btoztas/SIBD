@@ -25,7 +25,7 @@ CREATE TABLE appointment
    (patient_id VARCHAR(255),
     doctor_id VARCHAR(255),
     appointment_date DATE,  -- we choose data type DATE, so we can make datediffs
-    office VARCHAR(255),1
+    office VARCHAR(255),
     PRIMARY KEY(patient_id, doctor_id, appointment_date),
     FOREIGN KEY(patient_id) REFERENCES patient(patient_id),
     FOREIGN KEY(doctor_id) REFERENCES doctor(doctor_id));
