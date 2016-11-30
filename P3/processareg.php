@@ -1,72 +1,103 @@
-
 <html>
 
-<body>
-<?php
+  <head>
+    <title>BBA Health | Result</title>
+  </head>
 
-	$patient_name = $_REQUEST['patient_name'];
-	$patient_birthday = $_REQUEST['patient_birthday'];
-	$patient_address = $_REQUEST['patient_address'];
-	$doctor_name = $_REQUEST['doctor_name'];
-	$date = $_REQUEST['date'];
-	$office = $_REQUEST['office'];
+	<body>
+		<?php session_start();
 
-				$day=strftime("%A",strtotime($date));
-				if($day== "Saturday" or $day =="Sunday" ){
-					echo("Data apontada nao e um dia util");
-					$connection = NULL;
-					exit();
-				}
-
-
-				$host = 'db.ist.utl.pt';
-				$user = 'ist178719';
-				$pass = 'qygm3639';
-				$dsn = "mysql:host=$host;dbname=$user";
+			//Database connection
+			$host = 'db.ist.utl.pt';
+			$user = 'ist179069';
+			$pass = 'qpaq9059';
+			$dsn = "mysql:host=$host;dbname=$user";
+			try{
 				$connection = new PDO($dsn, $user, $pass);
+			}catch(PDOException $exception){
+				echo("<p>Error: ");
+				echo($exception->getMessage());
+				echo("</p>");
+				exit();
+			}
 
+      //Get all needed input data
+			$patient_name = $_REQUEST['patient_name'];
+			$patient_birthday = $_REQUEST['patient_birthday'];
+			$patient_address = $_REQUEST['patient_address'];
+			$doctor_id = $_REQUEST['doctor_id'];
+			$date = $_REQUEST['date'];
+			$office = $_REQUEST['office'];
 
+      //Test if it is a valid date (not on weekends and not in the past)
+      $day=strftime("%A",strtotime($date));
+      $today_time = strtotime(date('Y-m-d'));
+      $date_time = strtotime($date);
+      if($day== "Saturday" or $day =="Sunday" or $date_time<$today_time){
+        echo("<center><h3>Something went wrong... You can't schedule on weekends or past dates</h3></center>");
+        $connection = NULL;
 
-				$sql = "SELECT max(patient_id) FROM patient";
-				$result = $connection->query($sql);
+        //Just some button to home page
+        echo('<center>
+                <form>
+                  <input type="button" value="Home" onclick="window.location.href=\'index.html\'" />
+                </form>
+              </center>
+            ');
+        exit();
+      }
 
+      //Query to retrieve new patient_id
+			$sql = "SELECT max(patient_id) FROM patient";
+			$result = $connection->query($sql);
+			foreach($result as $row){
+				$patient_id = $row['max(patient_id)'] +1;
+			}
 
-				foreach($result as $row)
-				{
-					$patient_id = $row['max(patient_id)'] +1;
-				}
+      //Start new patient and new appointment transaction
+      $connection->beginTransaction();
 
-				//echo $patient_id;
+      //Query to incert new patient
+      $stmt1 = $connection->prepare("INSERT INTO patient VALUES (:patient_id, :patient_name, :patient_birthday, :patient_address)");
+      $stmt1->bindParam(':patient_id', $patient_id);
+      $stmt1->bindParam(':patient_name', $patient_name);
+      $stmt1->bindParam(':patient_birthday', $patient_birthday);
+      $stmt1->bindParam(':patient_address', $patient_address);
 
+      //Query to incert new apppointment
+      $stmt2 = $connection->prepare("INSERT INTO appointment VALUES (:patient_id, :doctor_id, :date, :office)");
+      $stmt2->bindParam(':patient_id', $patient_id);
+      $stmt2->bindParam(':doctor_id', $doctor_id);
+      $stmt2->bindParam(':date', $date);
+      $stmt2->bindParam(':office', $office);
 
-				$sql = "SELECT * FROM doctor where doctor.doctor_name='$doctor_name'";
-				$result = $connection->query($sql);
+      if($stmt1->execute() && $stmt2->execute()){
 
+        //Print results
+        echo("<center>
+                <h3>Created patient $patient_name, with number $patient_id, born on $patient_birthday and address $patient_address.<br>
+                New appointment scheduled for patient number $patient_id, with doctor number $doctor_id, on $date at office $office.</h3>
+                <form>
+                  <input type=\"button\" value=\"Home\" onclick=\"window.location.href='index.html'\"/>
+                </form>
+              </center>
+            ");
+        $connection->commit();
 
-				foreach($result as $row)
-				{
-					$doctor_id = $row['doctor_id'];
-				}
-					$connection->beginTransaction();
-					$sql = "INSERT INTO patient VALUES ('$patient_id','$patient_name', '$patient_birthday','$patient_address')";
-					$nrows = $connection->exec($sql);
-					//echo("<p>#$nrows paciente registado</p>");
+        //Gonna start all over again, better destroy session
+        session_destroy();
+      }else{
 
-					$sql = "INSERT INTO appointment VALUES ('$patient_id','$doctor_id', '$date','$office')";
-					$nrowz = $connection->exec($sql);
-					//echo("<p>#$nrowz consulta marcada</p>");
-					echo("<p>Ol&aacute $patient_name, informamos que o seu registo foi corretamente adicionado ao nosso servi&ccedilo</p>");
-					echo("<p>A sua consulta foi agendada para a data $date e ir&aacute decorrer no escrit&oacuterio $office</p>");
-					//
-					$connection->commit(); 
+        //Just some button to home page
+        echo('<center>
+                <form>
+                  <input type="button" value="Home" onclick="window.location.href=\'index.html\'" />
+                </form>
+              </center>
+            ');
+        $connection->rollback();
+      }
 
-?>
-
-	<form>
-		<input type="button" value="RETURN" onclick="window.location.href='http://web.ist.utl.pt/ist178719/form.php'" />
-	</form>
-
-
-
-</body>
+    ?>
+  </body>
 </html>

@@ -1,68 +1,83 @@
 <html>
-<body>
-<?php session_start();
-	//$patient_id = $_REQUEST['patient_id'];
-	$doctor_name = $_REQUEST['doctor_name'];
-	$date = $_REQUEST['date'];
-	$office = $_REQUEST['office'];
-	
 
-	$host = 'db.ist.utl.pt';
-	$user = 'ist178719';
-	$pass = 'qygm3639';
-	$dsn = "mysql:host=$host;dbname=$user";
-	$connection = new PDO($dsn, $user, $pass);
+  <head>
+    <title>BBA Health | Result</title>
+  </head>
 
-				$sql = "SELECT * FROM doctor where doctor.doctor_name='$doctor_name'";
-				$result = $connection->query($sql);
+  <body>
+    <?php session_start();
 
+      //Database connection
+      $host = 'db.ist.utl.pt';
+      $user = 'ist179069';
+      $pass = 'qpaq9059';
+      $dsn = "mysql:host=$host;dbname=$user";
+			try{
+				$connection = new PDO($dsn, $user, $pass);
+			}catch(PDOException $exception){
+				echo("<p>Error: ");
+				echo($exception->getMessage());
+				echo("</p>");
+				exit();
+			}
 
-				foreach($result as $row)
-				{
-					$id = $row['doctor_id'];
-				}
-				#echo $patient_id;
-				#echo $id;
-				#echo $date;
-				#echo $office;
-				$day=strftime("%A",strtotime($date));
-				#echo $day;
-				$patient_id = $_SESSION['patient_id'];
-				if($day== "Saturday" or $day =="Sunday" ){
-					echo("Data apontada nao e um dia util");
-					$connection = NULL;
-					exit();
+      //Get all the needed input data
+			$patient_id = $_SESSION['patient_id'];
+			$doctor_id = $_REQUEST['doctor_id'];
+			$date = $_REQUEST['date'];
+			$office = $_REQUEST['office'];
 
-				}else{
-				$connection->beginTransaction();	
-					$sql = "INSERT INTO appointment VALUES ('$patient_id','$id', '$date','$office')";
-					$nrows = $connection->exec($sql);
-					
-					$sql = "SELECT * FROM patient where patient_id='$patient_id'";
-					
-					$result = $connection->query($sql);
+			//Test if it is a valid date (not on weekends and not in the past)
+			$day=strftime("%A",strtotime($date));
+      $today_time = strtotime(date('Y-m-d'));
+      $date_time = strtotime($date);
+			if($day== "Saturday" or $day =="Sunday" or $date_time<$today_time){
+				echo("<center><h3>Something went wrong... You can't schedule on weekends or past dates</h3></center>");
+				$connection = NULL;
 
+        //Just some button to home page
+        echo('<center>
+                <form>
+        			    <input type="button" value="Home" onclick="window.location.href=\'index.html\'" />
+    		        </form>
+              </center>
+            ');
+				exit();
+			}else{
 
-					foreach($result as $row)
-					{
-						$name = $row['patient_name'];
-					}
-					echo("<p>$name, a sua consulta foi agendada com sucesso para a data $date no escrit&oacuterio $office</p>");
-				$connection->commit(); 
-				}
-	#$sql = "SELECT max(patient_id) FROM patient";
-	#$last_pid = $connection->query($sql);
-	#$patient_id = $last_pid +1;
-	
-	
-?>
+        //Query to incert new apppointment
+        $stmt = $connection->prepare("INSERT INTO appointment VALUES (:patient_id, :doctor_id, :date, :office)");
+        $stmt->bindParam(':patient_id', $patient_id);
+        $stmt->bindParam(':doctor_id', $doctor_id);
+        $stmt->bindParam(':date', $date);
+        $stmt->bindParam(':office', $office);
 
-	<form>
-		<input type="button" value="RETURN" onclick="window.location.href='http://web.ist.utl.pt/ist178719/form.php'" />
-	</form>
+        //Test if successful
+        if($stmt->execute()){
+          echo("<center>
+                  <h3>New appointment scheduled for patient number $patient_id, with doctor number $doctor_id, on $date at office $office.</h3>
+                  <form>
+              			<input type=\"button\" value=\"Home\" onclick=\"window.location.href='index.html'\"/>
+              		</form>
+                </center>
+              ");
 
-</body>
+          //Gonna start all over again, better destroy session
+          session_destroy();
+        }else{
+          echo("<center><h3>Something went wrong when adding appointment to database...</h3></center>");
+  				$connection = NULL;
 
-
-
+          //Just some button to home page
+          echo('<center>
+                  <form>
+          			    <input type="button" value="Home" onclick="window.location.href=\'index.html\'" />
+      		        </form>
+                </center>
+              ');
+  				exit();
+        }
+      }
+		?>
+	</body>
 </html>
