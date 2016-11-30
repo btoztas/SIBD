@@ -73,6 +73,9 @@
 
       if($stmt1->execute() && $stmt2->execute()){
 
+        //Commit transaction
+        $connection->commit();
+
         //Print results
         echo("<center>
                 <h3>Created patient $patient_name, with number $patient_id, born on $patient_birthday and address $patient_address.<br>
@@ -82,11 +85,12 @@
                 </form>
               </center>
             ");
-        $connection->commit();
-
         //Gonna start all over again, better destroy session
         session_destroy();
       }else{
+
+        //Rollback transaction
+        $connection->rollback();
 
         //Just some button to home page
         echo('<center>
@@ -95,7 +99,6 @@
                 </form>
               </center>
             ');
-        $connection->rollback();
       }
 
     ?>
