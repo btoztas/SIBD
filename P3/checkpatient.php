@@ -24,7 +24,7 @@
 
       //Query for inserted Patient Name
       $patient_name = $_REQUEST['patient_name'];
-      $stmt = $connection->prepare("SELECT * FROM patient WHERE patient_name=:patient_name");
+      $stmt = $connection->prepare("SELECT * FROM patient WHERE patient_name LIKE CONCAT('%',:patient_name,'%')");
       $stmt->bindParam(':patient_name', $patient_name);
       $stmt->execute();
 
