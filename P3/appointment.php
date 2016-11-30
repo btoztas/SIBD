@@ -47,7 +47,7 @@
 			?>
 			</select>
 			</p>
-			<p>Date:   &nbsp;&nbsp;&nbsp;<input type="date" name="date"/></p>
+			<p>Date [mm/dd/YYYY]:   &nbsp;&nbsp;&nbsp;<input type="date" name="date"/></p>
 			<p>Office: &nbsp;<input type="text" name="office"/></p>
 			<p><input type="submit" value="Submit"/></p>
 			</form>

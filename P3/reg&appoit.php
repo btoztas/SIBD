@@ -9,7 +9,7 @@
     	<form action="processareg.php">
       	<h3>Reagister and Appoint Patient</h3>
       	<p>Patient name: <input type="text" name="patient_name"/></p>
-      	<p>Patient birthday: <input type="date" name="patient_birthday"/></p>
+      	<p>Patient birthday [mm/dd/YYYY]: <input type="date" name="patient_birthday"/></p>
       	<p>Patient address: <input type="text" name="patient_address"/></p>
       	<p>Doctor:
       		<select name="doctor_id">
@@ -44,7 +44,7 @@
 
       		</select>
       	</p>
-      	<p>Date: <input type="date" name="date"/></p>
+      	<p>Date [mm/dd/YYYY]: <input type="date" name="date"/></p>
       	<p>Office: <input type="text" name="office"/></p>
       	<p><input type="submit" value="Submit"/></p>
     	</form>
