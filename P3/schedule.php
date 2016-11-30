@@ -32,7 +32,7 @@
       $today_time = strtotime(date('Y-m-d'));
       $date_time = strtotime($date);
 			if($day== "Saturday" or $day =="Sunday" or $date_time<$today_time){
-				echo("<center><h3>Something went wrong... You can't schedule on weekends or past dates</h3></center>");
+				echo("<center><h3>Something went wrong... Rembember, you can't schedule on weekends or past dates</h3></center>");
 				$connection = NULL;
 
         //Just some button to home page
